@@ -1,0 +1,774 @@
+# $FreeBSD$
+
+SRCDIR=	${.CURDIR:H}/drivers/gpu/drm/nouveau
+
+.PATH:	${SRCDIR} ${SRCDIR}/dispnv04 ${SRCDIR}/dispnv50 ${SRCDIR}/nvif ${SRCDIR}/nvkm
+
+.include "../kconfig.mk"
+
+KMOD=	nouveau
+SRCS+=	${SRCDIR}/nouveau_abi16.c \
+	${SRCDIR}/nouveau_bios.c \
+	${SRCDIR}/nouveau_bo.c \
+	${SRCDIR}/nouveau_chan.c \
+	${SRCDIR}/nouveau_connector.c \
+	${SRCDIR}/nouveau_display.c \
+	${SRCDIR}/nouveau_dma.c \
+	${SRCDIR}/nouveau_dp.c \
+	${SRCDIR}/nouveau_drm.c \
+	${SRCDIR}/nouveau_fbcon.c \
+	${SRCDIR}/nouveau_fence.c \
+	${SRCDIR}/nouveau_gem.c \
+	${SRCDIR}/nouveau_hwmon.c \
+	${SRCDIR}/nouveau_mem.c \
+	${SRCDIR}/nouveau_nvif.c \
+	${SRCDIR}/nouveau_prime.c \
+	${SRCDIR}/nouveau_sgdma.c \
+	${SRCDIR}/nouveau_ttm.c \
+	${SRCDIR}/nouveau_usif.c \
+	${SRCDIR}/nouveau_vga.c \
+	${SRCDIR}/nouveau_vmm.c \
+	${SRCDIR}/nv04_fbcon.c \
+	${SRCDIR}/nv04_fence.c \
+	${SRCDIR}/nv10_fence.c \
+	${SRCDIR}/nv17_fence.c \
+	${SRCDIR}/nv50_fbcon.c \
+	${SRCDIR}/nv50_fence.c \
+	${SRCDIR}/nv84_fence.c \
+	${SRCDIR}/nvc0_fbcon.c \
+	${SRCDIR}/nvc0_fence.c 
+
+# NVIF - HW resource manager
+SRCS+=	${SRCDIR}/nvif/client.c \
+	${SRCDIR}/nvif/device.c \
+	${SRCDIR}/nvif/disp.c \
+	${SRCDIR}/nvif/driver.c \
+	${SRCDIR}/nvif/fifo.c \
+	${SRCDIR}/nvif/mem.c \
+	${SRCDIR}/nvif/mmu.c \
+	${SRCDIR}/nvif/notify.c \
+	${SRCDIR}/nvif/object.c \
+	${SRCDIR}/nvif/user.c \
+	${SRCDIR}/nvif/userc361.c \
+	${SRCDIR}/nvif/vmm.c
+
+# NVKM interface library (NVKM user interface also defined here)
+SRCS+=	${SRCDIR}/nvkm/core/client.c \
+	${SRCDIR}/nvkm/core/engine.c \
+	${SRCDIR}/nvkm/core/enum.c \
+	${SRCDIR}/nvkm/core/event.c \
+	${SRCDIR}/nvkm/core/firmware.c \
+	${SRCDIR}/nvkm/core/gpuobj.c \
+	${SRCDIR}/nvkm/core/ioctl.c \
+	${SRCDIR}/nvkm/core/memory.c \
+	${SRCDIR}/nvkm/core/mm.c \
+	${SRCDIR}/nvkm/core/notify.c \
+	${SRCDIR}/nvkm/core/object.c \
+	${SRCDIR}/nvkm/core/oproxy.c \
+	${SRCDIR}/nvkm/core/option.c \
+	${SRCDIR}/nvkm/core/ramht.c \
+	${SRCDIR}/nvkm/core/subdev.c \
+	${SRCDIR}/nvkm/engine/bsp/g84.c \
+	${SRCDIR}/nvkm/engine/ce/gf100.c \
+	${SRCDIR}/nvkm/engine/ce/gk104.c \
+	${SRCDIR}/nvkm/engine/ce/gm107.c \
+	${SRCDIR}/nvkm/engine/ce/gm200.c \
+	${SRCDIR}/nvkm/engine/ce/gp100.c \
+	${SRCDIR}/nvkm/engine/ce/gp102.c \
+	${SRCDIR}/nvkm/engine/ce/gt215.c \
+	${SRCDIR}/nvkm/engine/ce/gv100.c \
+	${SRCDIR}/nvkm/engine/ce/tu102.c \
+	${SRCDIR}/nvkm/engine/cipher/g84.c \
+	${SRCDIR}/nvkm/engine/device/acpi.c \
+	${SRCDIR}/nvkm/engine/device/base.c \
+	${SRCDIR}/nvkm/engine/device/ctrl.c \
+	${SRCDIR}/nvkm/engine/device/pci.c \
+	${SRCDIR}/nvkm/engine/device/tegra.c \
+	${SRCDIR}/nvkm/engine/device/user.c \
+	${SRCDIR}/nvkm/engine/disp/base.c \
+	${SRCDIR}/nvkm/engine/disp/baseg84.c \
+	${SRCDIR}/nvkm/engine/disp/basegf119.c \
+	${SRCDIR}/nvkm/engine/disp/basegp102.c \
+	${SRCDIR}/nvkm/engine/disp/basenv50.c \
+	${SRCDIR}/nvkm/engine/disp/changf119.c \
+	${SRCDIR}/nvkm/engine/disp/changv100.c \
+	${SRCDIR}/nvkm/engine/disp/channv50.c \
+	${SRCDIR}/nvkm/engine/disp/conn.c \
+	${SRCDIR}/nvkm/engine/disp/coreg84.c \
+	${SRCDIR}/nvkm/engine/disp/coreg94.c \
+	${SRCDIR}/nvkm/engine/disp/coregf119.c \
+	${SRCDIR}/nvkm/engine/disp/coregk104.c \
+	${SRCDIR}/nvkm/engine/disp/coregp102.c \
+	${SRCDIR}/nvkm/engine/disp/coregv100.c \
+	${SRCDIR}/nvkm/engine/disp/corenv50.c \
+	${SRCDIR}/nvkm/engine/disp/cursgf119.c \
+	${SRCDIR}/nvkm/engine/disp/cursgp102.c \
+	${SRCDIR}/nvkm/engine/disp/cursgv100.c \
+	${SRCDIR}/nvkm/engine/disp/cursnv50.c \
+	${SRCDIR}/nvkm/engine/disp/dacgf119.c \
+	${SRCDIR}/nvkm/engine/disp/dacnv50.c \
+	${SRCDIR}/nvkm/engine/disp/dmacgf119.c \
+	${SRCDIR}/nvkm/engine/disp/dmacgp102.c \
+	${SRCDIR}/nvkm/engine/disp/dmacgv100.c \
+	${SRCDIR}/nvkm/engine/disp/dmacnv50.c \
+	${SRCDIR}/nvkm/engine/disp/dp.c \
+	${SRCDIR}/nvkm/engine/disp/g84.c \
+	${SRCDIR}/nvkm/engine/disp/g94.c \
+	${SRCDIR}/nvkm/engine/disp/gf119.c \
+	${SRCDIR}/nvkm/engine/disp/gk104.c \
+	${SRCDIR}/nvkm/engine/disp/gk110.c \
+	${SRCDIR}/nvkm/engine/disp/gm107.c \
+	${SRCDIR}/nvkm/engine/disp/gm200.c \
+	${SRCDIR}/nvkm/engine/disp/gp100.c \
+	${SRCDIR}/nvkm/engine/disp/gp102.c \
+	${SRCDIR}/nvkm/engine/disp/gt200.c \
+	${SRCDIR}/nvkm/engine/disp/gt215.c \
+	${SRCDIR}/nvkm/engine/disp/gv100.c \
+	${SRCDIR}/nvkm/engine/disp/hdagf119.c \
+	${SRCDIR}/nvkm/engine/disp/hdagt215.c \
+	${SRCDIR}/nvkm/engine/disp/hdmi.c \
+	${SRCDIR}/nvkm/engine/disp/hdmig84.c \
+	${SRCDIR}/nvkm/engine/disp/hdmigf119.c \
+	${SRCDIR}/nvkm/engine/disp/hdmigk104.c \
+	${SRCDIR}/nvkm/engine/disp/hdmigm200.c \
+	${SRCDIR}/nvkm/engine/disp/hdmigt215.c \
+	${SRCDIR}/nvkm/engine/disp/hdmigv100.c \
+	${SRCDIR}/nvkm/engine/disp/head.c \
+	${SRCDIR}/nvkm/engine/disp/headgf119.c \
+	${SRCDIR}/nvkm/engine/disp/headgv100.c \
+	${SRCDIR}/nvkm/engine/disp/headnv04.c \
+	${SRCDIR}/nvkm/engine/disp/headnv50.c \
+	${SRCDIR}/nvkm/engine/disp/ior.c \
+	${SRCDIR}/nvkm/engine/disp/mcp77.c \
+	${SRCDIR}/nvkm/engine/disp/mcp89.c \
+	${SRCDIR}/nvkm/engine/disp/nv04.c \
+	${SRCDIR}/nvkm/engine/disp/nv50.c \
+	${SRCDIR}/nvkm/engine/disp/oimmgf119.c \
+	${SRCDIR}/nvkm/engine/disp/oimmgp102.c \
+	${SRCDIR}/nvkm/engine/disp/oimmnv50.c \
+	${SRCDIR}/nvkm/engine/disp/outp.c \
+	${SRCDIR}/nvkm/engine/disp/ovlyg84.c \
+	${SRCDIR}/nvkm/engine/disp/ovlygf119.c \
+	${SRCDIR}/nvkm/engine/disp/ovlygk104.c \
+	${SRCDIR}/nvkm/engine/disp/ovlygp102.c \
+	${SRCDIR}/nvkm/engine/disp/ovlygt200.c \
+	${SRCDIR}/nvkm/engine/disp/ovlynv50.c \
+	${SRCDIR}/nvkm/engine/disp/piocgf119.c \
+	${SRCDIR}/nvkm/engine/disp/piocnv50.c \
+	${SRCDIR}/nvkm/engine/disp/piornv50.c \
+	${SRCDIR}/nvkm/engine/disp/tu102.c \
+	${SRCDIR}/nvkm/engine/disp/rootg84.c \
+	${SRCDIR}/nvkm/engine/disp/rootg94.c \
+	${SRCDIR}/nvkm/engine/disp/rootgf119.c \
+	${SRCDIR}/nvkm/engine/disp/rootgk104.c \
+	${SRCDIR}/nvkm/engine/disp/rootgk110.c \
+	${SRCDIR}/nvkm/engine/disp/rootgm107.c \
+	${SRCDIR}/nvkm/engine/disp/rootgm200.c \
+	${SRCDIR}/nvkm/engine/disp/rootgp100.c \
+	${SRCDIR}/nvkm/engine/disp/rootgp102.c \
+	${SRCDIR}/nvkm/engine/disp/rootgt200.c \
+	${SRCDIR}/nvkm/engine/disp/rootgt215.c \
+	${SRCDIR}/nvkm/engine/disp/rootgv100.c \
+	${SRCDIR}/nvkm/engine/disp/rootnv04.c \
+	${SRCDIR}/nvkm/engine/disp/rootnv50.c \
+	${SRCDIR}/nvkm/engine/disp/roottu102.c \
+	${SRCDIR}/nvkm/engine/disp/sorg84.c \
+	${SRCDIR}/nvkm/engine/disp/sorg94.c \
+	${SRCDIR}/nvkm/engine/disp/sorgf119.c \
+	${SRCDIR}/nvkm/engine/disp/sorgk104.c \
+	${SRCDIR}/nvkm/engine/disp/sorgm107.c \
+	${SRCDIR}/nvkm/engine/disp/sorgm200.c \
+	${SRCDIR}/nvkm/engine/disp/sorgt215.c \
+	${SRCDIR}/nvkm/engine/disp/sorgv100.c \
+	${SRCDIR}/nvkm/engine/disp/sormcp77.c \
+	${SRCDIR}/nvkm/engine/disp/sormcp89.c \
+	${SRCDIR}/nvkm/engine/disp/sornv50.c \
+	${SRCDIR}/nvkm/engine/disp/sortu102.c \
+	${SRCDIR}/nvkm/engine/disp/vga.c \
+	${SRCDIR}/nvkm/engine/disp/wimmgv100.c \
+	${SRCDIR}/nvkm/engine/disp/wndwgv100.c \
+	${SRCDIR}/nvkm/engine/dma/base.c \
+	${SRCDIR}/nvkm/engine/dma/gf100.c \
+	${SRCDIR}/nvkm/engine/dma/gf119.c \
+	${SRCDIR}/nvkm/engine/dma/gv100.c \
+	${SRCDIR}/nvkm/engine/dma/nv04.c \
+	${SRCDIR}/nvkm/engine/dma/nv50.c \
+	${SRCDIR}/nvkm/engine/dma/user.c \
+	${SRCDIR}/nvkm/engine/dma/usergf100.c \
+	${SRCDIR}/nvkm/engine/dma/usergf119.c \
+	${SRCDIR}/nvkm/engine/dma/usergv100.c \
+	${SRCDIR}/nvkm/engine/dma/usernv04.c \
+	${SRCDIR}/nvkm/engine/dma/usernv50.c \
+	${SRCDIR}/nvkm/engine/falcon.c \
+	${SRCDIR}/nvkm/engine/fifo/base.c \
+	${SRCDIR}/nvkm/engine/fifo/chan.c \
+	${SRCDIR}/nvkm/engine/fifo/chang84.c \
+	${SRCDIR}/nvkm/engine/fifo/channv50.c \
+	${SRCDIR}/nvkm/engine/fifo/dmag84.c \
+	${SRCDIR}/nvkm/engine/fifo/dmanv04.c \
+	${SRCDIR}/nvkm/engine/fifo/dmanv10.c \
+	${SRCDIR}/nvkm/engine/fifo/dmanv17.c \
+	${SRCDIR}/nvkm/engine/fifo/dmanv40.c \
+	${SRCDIR}/nvkm/engine/fifo/dmanv50.c \
+	${SRCDIR}/nvkm/engine/fifo/g84.c \
+	${SRCDIR}/nvkm/engine/fifo/gf100.c \
+	${SRCDIR}/nvkm/engine/fifo/gk104.c \
+	${SRCDIR}/nvkm/engine/fifo/gk110.c \
+	${SRCDIR}/nvkm/engine/fifo/gk208.c \
+	${SRCDIR}/nvkm/engine/fifo/gk20a.c \
+	${SRCDIR}/nvkm/engine/fifo/gm107.c \
+	${SRCDIR}/nvkm/engine/fifo/gm200.c \
+	${SRCDIR}/nvkm/engine/fifo/gm20b.c \
+	${SRCDIR}/nvkm/engine/fifo/gp100.c \
+	${SRCDIR}/nvkm/engine/fifo/gp10b.c \
+	${SRCDIR}/nvkm/engine/fifo/gpfifog84.c \
+	${SRCDIR}/nvkm/engine/fifo/gpfifogf100.c \
+	${SRCDIR}/nvkm/engine/fifo/gpfifogk104.c \
+	${SRCDIR}/nvkm/engine/fifo/gpfifogv100.c \
+	${SRCDIR}/nvkm/engine/fifo/gpfifonv50.c \
+	${SRCDIR}/nvkm/engine/fifo/gpfifotu102.c \
+	${SRCDIR}/nvkm/engine/fifo/gv100.c \
+	${SRCDIR}/nvkm/engine/fifo/nv04.c \
+	${SRCDIR}/nvkm/engine/fifo/nv10.c \
+	${SRCDIR}/nvkm/engine/fifo/nv17.c \
+	${SRCDIR}/nvkm/engine/fifo/nv40.c \
+	${SRCDIR}/nvkm/engine/fifo/nv50.c \
+	${SRCDIR}/nvkm/engine/fifo/tu102.c \
+	${SRCDIR}/nvkm/engine/fifo/usergv100.c \
+	${SRCDIR}/nvkm/engine/fifo/usertu102.c \
+	${SRCDIR}/nvkm/engine/gr/base.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgf100.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgf104.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgf108.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgf110.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgf117.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgf119.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgk104.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgk110.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgk110b.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgk208.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgk20a.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgm107.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgm200.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgm20b.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgp100.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgp102.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgp104.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgp107.c \
+	${SRCDIR}/nvkm/engine/gr/ctxgv100.c \
+	${SRCDIR}/nvkm/engine/gr/ctxnv40.c \
+	${SRCDIR}/nvkm/engine/gr/ctxnv50.c \
+	${SRCDIR}/nvkm/engine/gr/g84.c \
+	${SRCDIR}/nvkm/engine/gr/gf100.c \
+	${SRCDIR}/nvkm/engine/gr/gf104.c \
+	${SRCDIR}/nvkm/engine/gr/gf108.c \
+	${SRCDIR}/nvkm/engine/gr/gf110.c \
+	${SRCDIR}/nvkm/engine/gr/gf117.c \
+	${SRCDIR}/nvkm/engine/gr/gf119.c \
+	${SRCDIR}/nvkm/engine/gr/gk104.c \
+	${SRCDIR}/nvkm/engine/gr/gk110.c \
+	${SRCDIR}/nvkm/engine/gr/gk110b.c \
+	${SRCDIR}/nvkm/engine/gr/gk208.c \
+	${SRCDIR}/nvkm/engine/gr/gk20a.c \
+	${SRCDIR}/nvkm/engine/gr/gm107.c \
+	${SRCDIR}/nvkm/engine/gr/gm200.c \
+	${SRCDIR}/nvkm/engine/gr/gm20b.c \
+	${SRCDIR}/nvkm/engine/gr/gp100.c \
+	${SRCDIR}/nvkm/engine/gr/gp102.c \
+	${SRCDIR}/nvkm/engine/gr/gp104.c \
+	${SRCDIR}/nvkm/engine/gr/gp107.c \
+	${SRCDIR}/nvkm/engine/gr/gp10b.c \
+	${SRCDIR}/nvkm/engine/gr/gt200.c \
+	${SRCDIR}/nvkm/engine/gr/gt215.c \
+	${SRCDIR}/nvkm/engine/gr/gv100.c \
+	${SRCDIR}/nvkm/engine/gr/mcp79.c \
+	${SRCDIR}/nvkm/engine/gr/mcp89.c \
+	${SRCDIR}/nvkm/engine/gr/nv04.c \
+	${SRCDIR}/nvkm/engine/gr/nv10.c \
+	${SRCDIR}/nvkm/engine/gr/nv15.c \
+	${SRCDIR}/nvkm/engine/gr/nv17.c \
+	${SRCDIR}/nvkm/engine/gr/nv20.c \
+	${SRCDIR}/nvkm/engine/gr/nv25.c \
+	${SRCDIR}/nvkm/engine/gr/nv2a.c \
+	${SRCDIR}/nvkm/engine/gr/nv30.c \
+	${SRCDIR}/nvkm/engine/gr/nv34.c \
+	${SRCDIR}/nvkm/engine/gr/nv35.c \
+	${SRCDIR}/nvkm/engine/gr/nv40.c \
+	${SRCDIR}/nvkm/engine/gr/nv44.c \
+	${SRCDIR}/nvkm/engine/gr/nv50.c \
+	${SRCDIR}/nvkm/engine/mpeg/g84.c \
+	${SRCDIR}/nvkm/engine/mpeg/nv31.c \
+	${SRCDIR}/nvkm/engine/mpeg/nv40.c \
+	${SRCDIR}/nvkm/engine/mpeg/nv44.c \
+	${SRCDIR}/nvkm/engine/mpeg/nv50.c \
+	${SRCDIR}/nvkm/engine/mspdec/base.c \
+	${SRCDIR}/nvkm/engine/mspdec/g98.c \
+	${SRCDIR}/nvkm/engine/mspdec/gf100.c \
+	${SRCDIR}/nvkm/engine/mspdec/gk104.c \
+	${SRCDIR}/nvkm/engine/mspdec/gt215.c \
+	${SRCDIR}/nvkm/engine/msppp/base.c \
+	${SRCDIR}/nvkm/engine/msppp/g98.c \
+	${SRCDIR}/nvkm/engine/msppp/gf100.c \
+	${SRCDIR}/nvkm/engine/msppp/gt215.c \
+	${SRCDIR}/nvkm/engine/msvld/base.c \
+	${SRCDIR}/nvkm/engine/msvld/g98.c \
+	${SRCDIR}/nvkm/engine/msvld/gf100.c \
+	${SRCDIR}/nvkm/engine/msvld/gk104.c \
+	${SRCDIR}/nvkm/engine/msvld/gt215.c \
+	${SRCDIR}/nvkm/engine/msvld/mcp89.c \
+	${SRCDIR}/nvkm/engine/nvdec/base.c \
+	${SRCDIR}/nvkm/engine/nvdec/gp102.c \
+	${SRCDIR}/nvkm/engine/pm/base.c \
+	${SRCDIR}/nvkm/engine/pm/g84.c \
+	${SRCDIR}/nvkm/engine/pm/gf100.c \
+	${SRCDIR}/nvkm/engine/pm/gf108.c \
+	${SRCDIR}/nvkm/engine/pm/gf117.c \
+	${SRCDIR}/nvkm/engine/pm/gk104.c \
+	${SRCDIR}/nvkm/engine/pm/gt200.c \
+	${SRCDIR}/nvkm/engine/pm/gt215.c \
+	${SRCDIR}/nvkm/engine/pm/nv40.c \
+	${SRCDIR}/nvkm/engine/pm/nv50.c \
+	${SRCDIR}/nvkm/engine/sec/g98.c \
+	${SRCDIR}/nvkm/engine/sec2/base.c \
+	${SRCDIR}/nvkm/engine/sec2/gp102.c \
+	${SRCDIR}/nvkm/engine/sec2/tu102.c \
+	${SRCDIR}/nvkm/engine/sw/base.c \
+	${SRCDIR}/nvkm/engine/sw/chan.c \
+	${SRCDIR}/nvkm/engine/sw/gf100.c \
+	${SRCDIR}/nvkm/engine/sw/nv04.c \
+	${SRCDIR}/nvkm/engine/sw/nv10.c \
+	${SRCDIR}/nvkm/engine/sw/nv50.c \
+	${SRCDIR}/nvkm/engine/sw/nvsw.c \
+	${SRCDIR}/nvkm/engine/vp/g84.c \
+	${SRCDIR}/nvkm/engine/xtensa.c \
+	${SRCDIR}/nvkm/falcon/base.c \
+	${SRCDIR}/nvkm/falcon/msgqueue.c \
+	${SRCDIR}/nvkm/falcon/msgqueue_0137c63d.c \
+	${SRCDIR}/nvkm/falcon/msgqueue_0148cdec.c \
+	${SRCDIR}/nvkm/falcon/v1.c \
+	${SRCDIR}/nvkm/subdev/bar/base.c \
+	${SRCDIR}/nvkm/subdev/bar/g84.c \
+	${SRCDIR}/nvkm/subdev/bar/gf100.c \
+	${SRCDIR}/nvkm/subdev/bar/gk20a.c \
+	${SRCDIR}/nvkm/subdev/bar/gm107.c \
+	${SRCDIR}/nvkm/subdev/bar/gm20b.c \
+	${SRCDIR}/nvkm/subdev/bar/nv50.c \
+	${SRCDIR}/nvkm/subdev/bar/tu102.c \
+	${SRCDIR}/nvkm/subdev/bios/M0203.c \
+	${SRCDIR}/nvkm/subdev/bios/M0205.c \
+	${SRCDIR}/nvkm/subdev/bios/M0209.c \
+	${SRCDIR}/nvkm/subdev/bios/P0260.c \
+	${SRCDIR}/nvkm/subdev/bios/base.c \
+	${SRCDIR}/nvkm/subdev/bios/bit.c \
+	${SRCDIR}/nvkm/subdev/bios/boost.c \
+	${SRCDIR}/nvkm/subdev/bios/conn.c \
+	${SRCDIR}/nvkm/subdev/bios/cstep.c \
+	${SRCDIR}/nvkm/subdev/bios/dcb.c \
+	${SRCDIR}/nvkm/subdev/bios/disp.c \
+	${SRCDIR}/nvkm/subdev/bios/dp.c \
+	${SRCDIR}/nvkm/subdev/bios/extdev.c \
+	${SRCDIR}/nvkm/subdev/bios/fan.c \
+	${SRCDIR}/nvkm/subdev/bios/gpio.c \
+	${SRCDIR}/nvkm/subdev/bios/i2c.c \
+	${SRCDIR}/nvkm/subdev/bios/iccsense.c \
+	${SRCDIR}/nvkm/subdev/bios/image.c \
+	${SRCDIR}/nvkm/subdev/bios/init.c \
+	${SRCDIR}/nvkm/subdev/bios/mxm.c \
+	${SRCDIR}/nvkm/subdev/bios/npde.c \
+	${SRCDIR}/nvkm/subdev/bios/pcir.c \
+	${SRCDIR}/nvkm/subdev/bios/perf.c \
+	${SRCDIR}/nvkm/subdev/bios/pll.c \
+	${SRCDIR}/nvkm/subdev/bios/pmu.c \
+	${SRCDIR}/nvkm/subdev/bios/power_budget.c \
+	${SRCDIR}/nvkm/subdev/bios/ramcfg.c \
+	${SRCDIR}/nvkm/subdev/bios/rammap.c \
+	${SRCDIR}/nvkm/subdev/bios/shadow.c \
+	${SRCDIR}/nvkm/subdev/bios/shadowacpi.c \
+	${SRCDIR}/nvkm/subdev/bios/shadowof.c \
+	${SRCDIR}/nvkm/subdev/bios/shadowpci.c \
+	${SRCDIR}/nvkm/subdev/bios/shadowramin.c \
+	${SRCDIR}/nvkm/subdev/bios/shadowrom.c \
+	${SRCDIR}/nvkm/subdev/bios/therm.c \
+	${SRCDIR}/nvkm/subdev/bios/timing.c \
+	${SRCDIR}/nvkm/subdev/bios/vmap.c \
+	${SRCDIR}/nvkm/subdev/bios/volt.c \
+	${SRCDIR}/nvkm/subdev/bios/vpstate.c \
+	${SRCDIR}/nvkm/subdev/bios/xpio.c \
+	${SRCDIR}/nvkm/subdev/bus/base.c \
+	${SRCDIR}/nvkm/subdev/bus/g94.c \
+	${SRCDIR}/nvkm/subdev/bus/gf100.c \
+	${SRCDIR}/nvkm/subdev/bus/hwsq.c \
+	${SRCDIR}/nvkm/subdev/bus/nv04.c \
+	${SRCDIR}/nvkm/subdev/bus/nv31.c \
+	${SRCDIR}/nvkm/subdev/bus/nv50.c \
+	${SRCDIR}/nvkm/subdev/clk/base.c \
+	${SRCDIR}/nvkm/subdev/clk/g84.c \
+	${SRCDIR}/nvkm/subdev/clk/gf100.c \
+	${SRCDIR}/nvkm/subdev/clk/gk104.c \
+	${SRCDIR}/nvkm/subdev/clk/gk20a.c \
+	${SRCDIR}/nvkm/subdev/clk/gm20b.c \
+	${SRCDIR}/nvkm/subdev/clk/gt215.c \
+	${SRCDIR}/nvkm/subdev/clk/mcp77.c \
+	${SRCDIR}/nvkm/subdev/clk/nv04.c \
+	${SRCDIR}/nvkm/subdev/clk/nv40.c \
+	${SRCDIR}/nvkm/subdev/clk/nv50.c \
+	${SRCDIR}/nvkm/subdev/clk/pllgt215.c \
+	${SRCDIR}/nvkm/subdev/clk/pllnv04.c \
+	${SRCDIR}/nvkm/subdev/devinit/base.c \
+	${SRCDIR}/nvkm/subdev/devinit/g84.c \
+	${SRCDIR}/nvkm/subdev/devinit/g98.c \
+	${SRCDIR}/nvkm/subdev/devinit/gf100.c \
+	${SRCDIR}/nvkm/subdev/devinit/gm107.c \
+	${SRCDIR}/nvkm/subdev/devinit/gm200.c \
+	${SRCDIR}/nvkm/subdev/devinit/gt215.c \
+	${SRCDIR}/nvkm/subdev/devinit/gv100.c \
+	${SRCDIR}/nvkm/subdev/devinit/mcp89.c \
+	${SRCDIR}/nvkm/subdev/devinit/nv04.c \
+	${SRCDIR}/nvkm/subdev/devinit/nv05.c \
+	${SRCDIR}/nvkm/subdev/devinit/nv10.c \
+	${SRCDIR}/nvkm/subdev/devinit/nv1a.c \
+	${SRCDIR}/nvkm/subdev/devinit/nv20.c \
+	${SRCDIR}/nvkm/subdev/devinit/nv50.c \
+	${SRCDIR}/nvkm/subdev/devinit/tu102.c \
+	${SRCDIR}/nvkm/subdev/fault/base.c \
+	${SRCDIR}/nvkm/subdev/fault/gp100.c \
+	${SRCDIR}/nvkm/subdev/fault/gv100.c \
+	${SRCDIR}/nvkm/subdev/fault/tu102.c \
+	${SRCDIR}/nvkm/subdev/fault/user.c \
+	${SRCDIR}/nvkm/subdev/fb/base.c \
+	${SRCDIR}/nvkm/subdev/fb/g84.c \
+	${SRCDIR}/nvkm/subdev/fb/gddr3.c \
+	${SRCDIR}/nvkm/subdev/fb/gddr5.c \
+	${SRCDIR}/nvkm/subdev/fb/gf100.c \
+	${SRCDIR}/nvkm/subdev/fb/gf108.c \
+	${SRCDIR}/nvkm/subdev/fb/gk104.c \
+	${SRCDIR}/nvkm/subdev/fb/gk110.c \
+	${SRCDIR}/nvkm/subdev/fb/gk20a.c \
+	${SRCDIR}/nvkm/subdev/fb/gm107.c \
+	${SRCDIR}/nvkm/subdev/fb/gm200.c \
+	${SRCDIR}/nvkm/subdev/fb/gm20b.c \
+	${SRCDIR}/nvkm/subdev/fb/gp100.c \
+	${SRCDIR}/nvkm/subdev/fb/gp102.c \
+	${SRCDIR}/nvkm/subdev/fb/gp10b.c \
+	${SRCDIR}/nvkm/subdev/fb/gt215.c \
+	${SRCDIR}/nvkm/subdev/fb/gv100.c \
+	${SRCDIR}/nvkm/subdev/fb/mcp77.c \
+	${SRCDIR}/nvkm/subdev/fb/mcp89.c \
+	${SRCDIR}/nvkm/subdev/fb/nv04.c \
+	${SRCDIR}/nvkm/subdev/fb/nv10.c \
+	${SRCDIR}/nvkm/subdev/fb/nv1a.c \
+	${SRCDIR}/nvkm/subdev/fb/nv20.c \
+	${SRCDIR}/nvkm/subdev/fb/nv25.c \
+	${SRCDIR}/nvkm/subdev/fb/nv30.c \
+	${SRCDIR}/nvkm/subdev/fb/nv35.c \
+	${SRCDIR}/nvkm/subdev/fb/nv36.c \
+	${SRCDIR}/nvkm/subdev/fb/nv40.c \
+	${SRCDIR}/nvkm/subdev/fb/nv41.c \
+	${SRCDIR}/nvkm/subdev/fb/nv44.c \
+	${SRCDIR}/nvkm/subdev/fb/nv46.c \
+	${SRCDIR}/nvkm/subdev/fb/nv47.c \
+	${SRCDIR}/nvkm/subdev/fb/nv49.c \
+	${SRCDIR}/nvkm/subdev/fb/nv4e.c \
+	${SRCDIR}/nvkm/subdev/fb/nv50.c \
+	${SRCDIR}/nvkm/subdev/fb/ram.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgf100.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgf108.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgk104.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgm107.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgm200.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgp100.c \
+	${SRCDIR}/nvkm/subdev/fb/ramgt215.c \
+	${SRCDIR}/nvkm/subdev/fb/rammcp77.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv04.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv10.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv1a.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv20.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv40.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv41.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv44.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv49.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv4e.c \
+	${SRCDIR}/nvkm/subdev/fb/ramnv50.c \
+	${SRCDIR}/nvkm/subdev/fb/sddr2.c \
+	${SRCDIR}/nvkm/subdev/fb/sddr3.c \
+	${SRCDIR}/nvkm/subdev/fuse/base.c \
+	${SRCDIR}/nvkm/subdev/fuse/gf100.c \
+	${SRCDIR}/nvkm/subdev/fuse/gm107.c \
+	${SRCDIR}/nvkm/subdev/fuse/nv50.c \
+	${SRCDIR}/nvkm/subdev/gpio/base.c \
+	${SRCDIR}/nvkm/subdev/gpio/g94.c \
+	${SRCDIR}/nvkm/subdev/gpio/gf119.c \
+	${SRCDIR}/nvkm/subdev/gpio/gk104.c \
+	${SRCDIR}/nvkm/subdev/gpio/nv10.c \
+	${SRCDIR}/nvkm/subdev/gpio/nv50.c \
+	${SRCDIR}/nvkm/subdev/gsp/gv100.c \
+	${SRCDIR}/nvkm/subdev/i2c/anx9805.c \
+	${SRCDIR}/nvkm/subdev/i2c/aux.c \
+	${SRCDIR}/nvkm/subdev/i2c/auxg94.c \
+	${SRCDIR}/nvkm/subdev/i2c/auxgf119.c \
+	${SRCDIR}/nvkm/subdev/i2c/auxgm200.c \
+	${SRCDIR}/nvkm/subdev/i2c/base.c \
+	${SRCDIR}/nvkm/subdev/i2c/bit.c \
+	${SRCDIR}/nvkm/subdev/i2c/bus.c \
+	${SRCDIR}/nvkm/subdev/i2c/busgf119.c \
+	${SRCDIR}/nvkm/subdev/i2c/busnv04.c \
+	${SRCDIR}/nvkm/subdev/i2c/busnv4e.c \
+	${SRCDIR}/nvkm/subdev/i2c/busnv50.c \
+	${SRCDIR}/nvkm/subdev/i2c/g94.c \
+	${SRCDIR}/nvkm/subdev/i2c/gf117.c \
+	${SRCDIR}/nvkm/subdev/i2c/gf119.c \
+	${SRCDIR}/nvkm/subdev/i2c/gk104.c \
+	${SRCDIR}/nvkm/subdev/i2c/gm200.c \
+	${SRCDIR}/nvkm/subdev/i2c/nv04.c \
+	${SRCDIR}/nvkm/subdev/i2c/nv4e.c \
+	${SRCDIR}/nvkm/subdev/i2c/nv50.c \
+	${SRCDIR}/nvkm/subdev/i2c/pad.c \
+	${SRCDIR}/nvkm/subdev/i2c/padg94.c \
+	${SRCDIR}/nvkm/subdev/i2c/padgf119.c \
+	${SRCDIR}/nvkm/subdev/i2c/padgm200.c \
+	${SRCDIR}/nvkm/subdev/i2c/padnv04.c \
+	${SRCDIR}/nvkm/subdev/i2c/padnv4e.c \
+	${SRCDIR}/nvkm/subdev/i2c/padnv50.c \
+	${SRCDIR}/nvkm/subdev/ibus/gf100.c \
+	${SRCDIR}/nvkm/subdev/ibus/gf117.c \
+	${SRCDIR}/nvkm/subdev/ibus/gk104.c \
+	${SRCDIR}/nvkm/subdev/ibus/gk20a.c \
+	${SRCDIR}/nvkm/subdev/ibus/gm200.c \
+	${SRCDIR}/nvkm/subdev/ibus/gp10b.c \
+	${SRCDIR}/nvkm/subdev/iccsense/base.c \
+	${SRCDIR}/nvkm/subdev/iccsense/gf100.c \
+	${SRCDIR}/nvkm/subdev/instmem/base.c \
+	${SRCDIR}/nvkm/subdev/instmem/gk20a.c \
+	${SRCDIR}/nvkm/subdev/instmem/nv04.c \
+	${SRCDIR}/nvkm/subdev/instmem/nv40.c \
+	${SRCDIR}/nvkm/subdev/instmem/nv50.c \
+	${SRCDIR}/nvkm/subdev/ltc/base.c \
+	${SRCDIR}/nvkm/subdev/ltc/gf100.c \
+	${SRCDIR}/nvkm/subdev/ltc/gk104.c \
+	${SRCDIR}/nvkm/subdev/ltc/gm107.c \
+	${SRCDIR}/nvkm/subdev/ltc/gm200.c \
+	${SRCDIR}/nvkm/subdev/ltc/gp100.c \
+	${SRCDIR}/nvkm/subdev/ltc/gp102.c \
+	${SRCDIR}/nvkm/subdev/mc/base.c \
+	${SRCDIR}/nvkm/subdev/mc/g84.c \
+	${SRCDIR}/nvkm/subdev/mc/g98.c \
+	${SRCDIR}/nvkm/subdev/mc/gf100.c \
+	${SRCDIR}/nvkm/subdev/mc/gk104.c \
+	${SRCDIR}/nvkm/subdev/mc/gk20a.c \
+	${SRCDIR}/nvkm/subdev/mc/gp100.c \
+	${SRCDIR}/nvkm/subdev/mc/gp10b.c \
+	${SRCDIR}/nvkm/subdev/mc/gt215.c \
+	${SRCDIR}/nvkm/subdev/mc/nv04.c \
+	${SRCDIR}/nvkm/subdev/mc/nv11.c \
+	${SRCDIR}/nvkm/subdev/mc/nv17.c \
+	${SRCDIR}/nvkm/subdev/mc/nv44.c \
+	${SRCDIR}/nvkm/subdev/mc/nv50.c \
+	${SRCDIR}/nvkm/subdev/mc/tu102.c \
+	${SRCDIR}/nvkm/subdev/mmu/base.c \
+	${SRCDIR}/nvkm/subdev/mmu/g84.c \
+	${SRCDIR}/nvkm/subdev/mmu/gf100.c \
+	${SRCDIR}/nvkm/subdev/mmu/gk104.c \
+	${SRCDIR}/nvkm/subdev/mmu/gk20a.c \
+	${SRCDIR}/nvkm/subdev/mmu/gm200.c \
+	${SRCDIR}/nvkm/subdev/mmu/gm20b.c \
+	${SRCDIR}/nvkm/subdev/mmu/gp100.c \
+	${SRCDIR}/nvkm/subdev/mmu/gp10b.c \
+	${SRCDIR}/nvkm/subdev/mmu/gv100.c \
+	${SRCDIR}/nvkm/subdev/mmu/mcp77.c \
+	${SRCDIR}/nvkm/subdev/mmu/mem.c \
+	${SRCDIR}/nvkm/subdev/mmu/memgf100.c \
+	${SRCDIR}/nvkm/subdev/mmu/memnv04.c \
+	${SRCDIR}/nvkm/subdev/mmu/memnv50.c \
+	${SRCDIR}/nvkm/subdev/mmu/nv04.c \
+	${SRCDIR}/nvkm/subdev/mmu/nv41.c \
+	${SRCDIR}/nvkm/subdev/mmu/nv44.c \
+	${SRCDIR}/nvkm/subdev/mmu/nv50.c \
+	${SRCDIR}/nvkm/subdev/mmu/tu102.c \
+	${SRCDIR}/nvkm/subdev/mmu/umem.c \
+	${SRCDIR}/nvkm/subdev/mmu/ummu.c \
+	${SRCDIR}/nvkm/subdev/mmu/uvmm.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmm.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgf100.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgk104.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgk20a.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgm200.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgm20b.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgp100.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgp10b.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmgv100.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmmcp77.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmnv04.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmnv41.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmnv44.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmnv50.c \
+	${SRCDIR}/nvkm/subdev/mmu/vmmtu102.c \
+	${SRCDIR}/nvkm/subdev/mxm/base.c \
+	${SRCDIR}/nvkm/subdev/mxm/mxms.c \
+	${SRCDIR}/nvkm/subdev/mxm/nv50.c \
+	${SRCDIR}/nvkm/subdev/pci/agp.c \
+	${SRCDIR}/nvkm/subdev/pci/base.c \
+	${SRCDIR}/nvkm/subdev/pci/g84.c \
+	${SRCDIR}/nvkm/subdev/pci/g92.c \
+	${SRCDIR}/nvkm/subdev/pci/g94.c \
+	${SRCDIR}/nvkm/subdev/pci/gf100.c \
+	${SRCDIR}/nvkm/subdev/pci/gf106.c \
+	${SRCDIR}/nvkm/subdev/pci/gk104.c \
+	${SRCDIR}/nvkm/subdev/pci/gp100.c \
+	${SRCDIR}/nvkm/subdev/pci/nv04.c \
+	${SRCDIR}/nvkm/subdev/pci/nv40.c \
+	${SRCDIR}/nvkm/subdev/pci/nv46.c \
+	${SRCDIR}/nvkm/subdev/pci/nv4c.c \
+	${SRCDIR}/nvkm/subdev/pci/pcie.c \
+	${SRCDIR}/nvkm/subdev/pmu/base.c \
+	${SRCDIR}/nvkm/subdev/pmu/gf100.c \
+	${SRCDIR}/nvkm/subdev/pmu/gf119.c \
+	${SRCDIR}/nvkm/subdev/pmu/gk104.c \
+	${SRCDIR}/nvkm/subdev/pmu/gk110.c \
+	${SRCDIR}/nvkm/subdev/pmu/gk208.c \
+	${SRCDIR}/nvkm/subdev/pmu/gk20a.c \
+	${SRCDIR}/nvkm/subdev/pmu/gm107.c \
+	${SRCDIR}/nvkm/subdev/pmu/gm20b.c \
+	${SRCDIR}/nvkm/subdev/pmu/gp100.c \
+	${SRCDIR}/nvkm/subdev/pmu/gp102.c \
+	${SRCDIR}/nvkm/subdev/pmu/gt215.c \
+	${SRCDIR}/nvkm/subdev/pmu/memx.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr_r352.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr_r361.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr_r364.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr_r367.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr_r370.c \
+	${SRCDIR}/nvkm/subdev/secboot/acr_r375.c \
+	${SRCDIR}/nvkm/subdev/secboot/base.c \
+	${SRCDIR}/nvkm/subdev/secboot/gm200.c \
+	${SRCDIR}/nvkm/subdev/secboot/gm20b.c \
+	${SRCDIR}/nvkm/subdev/secboot/gp102.c \
+	${SRCDIR}/nvkm/subdev/secboot/gp108.c \
+	${SRCDIR}/nvkm/subdev/secboot/gp10b.c \
+	${SRCDIR}/nvkm/subdev/secboot/hs_ucode.c \
+	${SRCDIR}/nvkm/subdev/secboot/ls_ucode_gr.c \
+	${SRCDIR}/nvkm/subdev/secboot/ls_ucode_msgqueue.c \
+	${SRCDIR}/nvkm/subdev/therm/base.c \
+	${SRCDIR}/nvkm/subdev/therm/fan.c \
+	${SRCDIR}/nvkm/subdev/therm/fannil.c \
+	${SRCDIR}/nvkm/subdev/therm/fanpwm.c \
+	${SRCDIR}/nvkm/subdev/therm/fantog.c \
+	${SRCDIR}/nvkm/subdev/therm/g84.c \
+	${SRCDIR}/nvkm/subdev/therm/gf100.c \
+	${SRCDIR}/nvkm/subdev/therm/gf119.c \
+	${SRCDIR}/nvkm/subdev/therm/gk104.c \
+	${SRCDIR}/nvkm/subdev/therm/gm107.c \
+	${SRCDIR}/nvkm/subdev/therm/gm200.c \
+	${SRCDIR}/nvkm/subdev/therm/gp100.c \
+	${SRCDIR}/nvkm/subdev/therm/gt215.c \
+	${SRCDIR}/nvkm/subdev/therm/ic.c \
+	${SRCDIR}/nvkm/subdev/therm/nv40.c \
+	${SRCDIR}/nvkm/subdev/therm/nv50.c \
+	${SRCDIR}/nvkm/subdev/therm/temp.c \
+	${SRCDIR}/nvkm/subdev/timer/base.c \
+	${SRCDIR}/nvkm/subdev/timer/gk20a.c \
+	${SRCDIR}/nvkm/subdev/timer/nv04.c \
+	${SRCDIR}/nvkm/subdev/timer/nv40.c \
+	${SRCDIR}/nvkm/subdev/timer/nv41.c \
+	${SRCDIR}/nvkm/subdev/top/base.c \
+	${SRCDIR}/nvkm/subdev/top/gk104.c \
+	${SRCDIR}/nvkm/subdev/volt/base.c \
+	${SRCDIR}/nvkm/subdev/volt/gf100.c \
+	${SRCDIR}/nvkm/subdev/volt/gf117.c \
+	${SRCDIR}/nvkm/subdev/volt/gk104.c \
+	${SRCDIR}/nvkm/subdev/volt/gk20a.c \
+	${SRCDIR}/nvkm/subdev/volt/gm20b.c \
+	${SRCDIR}/nvkm/subdev/volt/gpio.c \
+	${SRCDIR}/nvkm/subdev/volt/nv40.c 
+	
+
+.if !empty(KCONFIG:MACPI)
+SRCS+=  opt_acpi.h \
+	nouveau_acpi.c
+.endif
+
+.if !empty(KCONFIG:MCOMPAT)
+SRCS+=  nouveau_ioc32.c
+.endif
+
+.if !empty(KCONFIG:MDEBUG_FS)
+SRCS+=  nouveau_debugfs.c
+.endif
+
+.if !empty(KCONFIG:MLEDS_CLASS)
+SRCS+=  nouveau_led.c
+.endif
+
+.if !empty(KCONFIG:MDRM_NOUVEAU_SVM)
+SRCS+=  nouveau_dmem.c \
+	nouveau_svm.c
+.endif
+
+.if !empty(KCONFIG:MDRM_NOUVEAU_BACKLIGHT)
+SRCS+=  nouveau_backlight.c
+.endif
+
+.if !empty(KCONFIG:MNOUVEAU_PLATFORM_DRIVER)
+SRCS+=  nouveau_platform.c
+.endif
+
+CLEANFILES+= ${KMOD}.ko.full ${KMOD}.ko.debug
+
+CFLAGS+= -I${.CURDIR:H}/linuxkpi/gplv2/include
+CFLAGS+= -I${.CURDIR:H}/linuxkpi/bsd/include
+CFLAGS+= -I${SYSDIR}/compat/linuxkpi/common/include
+CFLAGS+= -I${.CURDIR:H}/linuxkpi/dummy/include
+
+CFLAGS+= -I${.CURDIR:H}/include
+CFLAGS+= -I${.CURDIR:H}/include/drm
+CFLAGS+= -I${.CURDIR:H}/include/uapi
+CFLAGS+= -I${SRCDIR:H:H}
+CFLAGS+= -I${SRCDIR:H}/nouveau
+CFLAGS+= -I${SRCDIR:H}/nouveau/include
+CFLAGS+= -I${SRCDIR:H}/nouveau/include/nvif
+CFLAGS+= -I${SRCDIR:H}/nouveau/include/nvkm
+CFLAGS+= -I${SRCDIR:H}/nouveau/include/nvkm/subdev
+
+CFLAGS+= '-DKBUILD_MODNAME="${KMOD}"'
+CFLAGS+= '-DLINUXKPI_PARAM_PREFIX=nouveau_' -DDRM_SYSCTL_PARAM_PREFIX=_${KMOD} -DLINUXKPI_VERSION=50000 -DCONFIG_DRM_NOUVEAU_BACKLIGHT -DCONFIG_DRM_NOUVEAU -DCONFIG_NOUVEAU_DEBUG -DCONFIG_NOUVEAU_DEBUG_DEFAULT
+CFLAGS+= ${KCONFIG:C/(.*)/-DCONFIG_\1/}
+
+CFLAGS.gcc+= -Wno-redundant-decls -Wno-cast-qual -Wno-unused-but-set-variable \
+	-Wno-maybe-uninitialized -Wno-implicit-int]
+
+LDFLAGS+= -Wl,--allow-multiple-definition
+
+SRCS+=	device_if.h vnode_if.h bus_if.h pci_if.h pci_iov_if.h device_if.h iicbus_if.h opt_drm.h \
+	opt_vm.h opt_compat.h opt_syscons.h
+
+.include <bsd.kmod.mk>
+
+CWARNFLAGS+= -Wno-format -Wno-unused-but-set-variable -Wno-visibility
+CWARNFLAGS+= -Wno-expansion-to-defined -Wno-gnu-variable-sized-type-not-at-end -Wno-incompatible-pointer-types
+CWARNFLAGS+=		-Wno-pointer-arith ${CWARNFLAGS.${.IMPSRC:T}}
+CWARNFLAGS.nouveau_acpi.c=	-Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_abi16.c=	-Wno-unused-variable -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_bios.c=	-Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_bo.c=	-Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_chan.c=	-Wno-implicit-function-declaration -Wno-unused-variable -Wno-gnu-variable-sized-type-not-at-end
+CWARNFLAGS.nouveau_connector.c=	-Wno-implicit-function-declaration -Wno-unused-variable -Wno-int-conversion -Wno-implicit-int -Wno-strict-prototypes -Wno-uninitialized
+CWARNFLAGS.nouveau_debugfs.c=	-Wno-int-conversion -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_display.c=	-Wno-int-conversion -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_drm.c=	-Wno-implicit-int -Wno-unused-variable -Wno-int-conversion -Wno-implicit-function-declaration -Wno-implicit-int -Wno-strict-prototypes
+CWARNFLAGS.nouveau_fence.c=	-Wno-int-conversion -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_fbcon.c=	-Wno-int-conversion -Wno-implicit-function-declaration -Wno-cast-qual
+CWARNFLAGS.nouveau_led.c=	-Wno-int-conversion -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_platform.c=	-Wno-int-conversion -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_svm.c=	-Wno-int-conversion -Wno-implicit-function-declaration
+CWARNFLAGS.nouveau_ttm.c=	-Wno-unused-variable
+CWARNFLAGS.nv04_fbcon.c=	-Wno-int-conversion -Wno-implicit-function-declaration -Wno-cast-qual
+CWARNFLAGS.nv50_fbcon.c=	-Wno-int-conversion -Wno-implicit-function-declaration -Wno-cast-qual
+CWARNFLAGS.nvc0_fbcon.c=	-Wno-int-conversion -Wno-implicit-function-declaration -Wno-cast-qual
+CWARNFLAGS.event.c=			-Wno-implicit-int -Wno-unused-variable -Wno-int-conversion -Wno-implicit-function-declaration -Wno-implicit-int -Wno-strict-prototypes -Wno-cast-qual
+CWARNFLAGS.notify.c=		-Wno-implicit-int -Wno-unused-variable -Wno-int-conversion -Wno-implicit-function-declaration -Wno-implicit-int -Wno-strict-prototypes -Wno-cast-qual
+CWARNFLAGS.object.c=		-Wno-implicit-int -Wno-unused-variable -Wno-int-conversion -Wno-implicit-function-declaration -Wno-implicit-int -Wno-strict-prototypes -Wno-cast-qual
+CWARNFLAGS.subdev.c=		-Wno-implicit-int -Wno-unused-variable -Wno-int-conversion -Wno-implicit-function-declaration -Wno-implicit-int -Wno-strict-prototypes -Wno-cast-qual
+
+.if ${COMPILER_VERSION} >= 130000
+CWARNFLAGS+=   -Wno-error=unused-but-set-variable
+.endif
